@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+pandas
+numpy
+scikit-learn
+xgboost
+sqlalchemy
+python-multipart
+joblib
+aiofiles==23.2.1

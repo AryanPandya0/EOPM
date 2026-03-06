@@ -1,0 +1,30 @@
+{
+  "best_model": "Random Forest",
+  "metrics": {
+    "Linear Regression": {
+      "rmse": 9.8453,
+      "mae": 7.7581,
+      "r2": 0.2308
+    },
+    "Random Forest": {
+      "rmse": 7.558,
+      "mae": 5.2753,
+      "r2": 0.5467
+    },
+    "XGBoost": {
+      "rmse": 8.0096,
+      "mae": 5.5324,
+      "r2": 0.4909
+    }
+  },
+  "feature_names": [
+    "hour",
+    "weekday",
+    "is_peak",
+    "is_weekend",
+    "temperature",
+    "occupancy",
+    "day_of_year",
+    "month"
+  ]
+}

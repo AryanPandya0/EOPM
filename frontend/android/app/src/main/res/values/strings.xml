@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">EOPM Energy Optimizer</string>
+    <string name="title_activity_main">EOPM Energy Optimizer</string>
+    <string name="package_name">com.eopm.energyoptimizer</string>
+    <string name="custom_url_scheme">com.eopm.energyoptimizer</string>
+</resources>
