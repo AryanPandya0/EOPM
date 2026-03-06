@@ -32,7 +32,7 @@ async def overview():
 
 
 @router.get("/trends")
-async def trends(granularity: str = Query(default="hourly", regex="^(hourly|daily)$")):
+async def trends(granularity: str = Query(default="hourly", pattern="^(hourly|daily)$")):
     """Energy consumption trends over time."""
     df = get_current_df()
     if df is None:
