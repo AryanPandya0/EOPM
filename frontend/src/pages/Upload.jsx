@@ -20,7 +20,11 @@ export default function Upload() {
             setUploadStatus(res.data.message);
             setStats(res.data.stats);
         } catch (err) {
-            setError(err.response?.data?.detail || 'Upload failed');
+            if (err.code === 'ERR_NETWORK' || !err.response) {
+                setError('Cannot reach the server. Make sure the backend is running and your phone is on the same network as the server.');
+            } else {
+                setError(err.response?.data?.detail || 'Upload failed: ' + (err.message || 'Unknown error'));
+            }
         }
         setLoading(false);
     }, []);

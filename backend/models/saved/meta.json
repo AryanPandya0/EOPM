@@ -2,19 +2,19 @@
   "best_model": "Random Forest",
   "metrics": {
     "Linear Regression": {
-      "rmse": 9.8453,
-      "mae": 7.7581,
-      "r2": 0.2308
+      "rmse": 9.7934,
+      "mae": 7.7276,
+      "r2": 0.2389
     },
     "Random Forest": {
-      "rmse": 7.558,
-      "mae": 5.2753,
-      "r2": 0.5467
+      "rmse": 7.5641,
+      "mae": 5.2698,
+      "r2": 0.546
     },
     "XGBoost": {
-      "rmse": 8.0096,
-      "mae": 5.5324,
-      "r2": 0.4909
+      "rmse": 8.0155,
+      "mae": 5.5197,
+      "r2": 0.4902
     }
   },
   "feature_names": [
