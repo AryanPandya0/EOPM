@@ -1,4 +1,5 @@
-import pd
+import pandas as pd
+import os
 from config import PEAK_HOURS
 
 def _fuzzy_match_column(columns, target_keywords):
@@ -9,9 +10,16 @@ def _fuzzy_match_column(columns, target_keywords):
                 return col
     return None
 
-def load_and_validate_csv(filepath: str) -> pd.DataFrame:
-    """Load an arbitrary CSV and forcefully map it to expected schema via fuzzy matching."""
-    df = pd.read_csv(filepath)
+def load_and_validate(filepath: str) -> pd.DataFrame:
+    """Load an arbitrary CSV or Excel file and forcefully map it to expected schema via fuzzy matching."""
+    ext = os.path.splitext(filepath)[1].lower()
+    if ext in ('.xlsx', '.xls'):
+        try:
+            df = pd.read_excel(filepath, engine='openpyxl')
+        except Exception:
+            df = pd.read_excel(filepath)
+    else:
+        df = pd.read_csv(filepath)
 
     # Normalize column names
     df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]

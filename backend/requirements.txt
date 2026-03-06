@@ -8,3 +8,5 @@ sqlalchemy
 python-multipart
 joblib
 aiofiles==23.2.1
+openpyxl
+requests

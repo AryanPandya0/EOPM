@@ -6,7 +6,7 @@ import shutil
 from datetime import datetime
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from config import UPLOAD_DIR, SAMPLE_DATA_PATH
-from modules.preprocessing import load_and_validate_csv, preprocess, compute_summary_stats
+from modules.preprocessing import load_and_validate, preprocess, compute_summary_stats
 
 router = APIRouter(prefix="/api/dataset", tags=["Dataset"])
 
@@ -24,16 +24,17 @@ def get_current_df():
 
 @router.post("/upload")
 async def upload_dataset(file: UploadFile = File(...)):
-    """Upload a CSV dataset for analysis."""
-    if not file.filename.endswith(".csv"):
-        raise HTTPException(400, "Only CSV files are supported.")
+    """Upload a CSV or XLSX dataset for analysis."""
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in (".csv", ".xlsx", ".xls"):
+        raise HTTPException(400, "Only CSV and Excel (.xlsx/.xls) files are supported.")
 
     filepath = os.path.join(UPLOAD_DIR, file.filename)
     with open(filepath, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
     try:
-        raw = load_and_validate_csv(filepath)
+        raw = load_and_validate(filepath)
         df = preprocess(raw)
     except ValueError as e:
         os.remove(filepath)
@@ -58,7 +59,7 @@ async def load_sample_dataset():
     if not os.path.exists(SAMPLE_DATA_PATH):
         raise HTTPException(404, "Sample dataset not found. Run generate_sample.py first.")
 
-    raw = load_and_validate_csv(SAMPLE_DATA_PATH)
+    raw = load_and_validate(SAMPLE_DATA_PATH)
     df = preprocess(raw)
     _dataframes["sample_energy_data.csv"] = df
     stats = compute_summary_stats(df)

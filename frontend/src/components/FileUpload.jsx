@@ -1,15 +1,25 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { Upload, FileText, CheckCircle, AlertCircle } from 'lucide-react';
+
+const ACCEPTED_EXTENSIONS = ['.csv', '.xlsx', '.xls'];
+const ACCEPT_STRING = '.csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel';
+
+function isValidFile(file) {
+    if (!file) return false;
+    const name = file.name.toLowerCase();
+    return ACCEPTED_EXTENSIONS.some((ext) => name.endsWith(ext));
+}
 
 export default function FileUpload({ onUpload, loading }) {
     const [dragActive, setDragActive] = useState(false);
     const [fileName, setFileName] = useState(null);
+    const fileInputRef = useRef(null);
 
     const handleFile = useCallback(
         (file) => {
             if (!file) return;
-            if (!file.name.endsWith('.csv')) {
-                alert('Please upload a CSV file.');
+            if (!isValidFile(file)) {
+                alert('Please upload a CSV or Excel (.xlsx) file.');
                 return;
             }
             setFileName(file.name);
@@ -38,6 +48,14 @@ export default function FileUpload({ onUpload, loading }) {
     const handleInputChange = (e) => {
         const file = e.target.files[0];
         handleFile(file);
+        // Reset input so same file can be selected again
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
+    const openFilePicker = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
     };
 
     return (
@@ -46,12 +64,13 @@ export default function FileUpload({ onUpload, loading }) {
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
-            onClick={() => document.getElementById('csv-file-input').click()}
+            onClick={openFilePicker}
         >
             <input
-                id="csv-file-input"
+                ref={fileInputRef}
+                id="dataset-file-input"
                 type="file"
-                accept=".csv"
+                accept={ACCEPT_STRING}
                 className="hidden"
                 onChange={handleInputChange}
             />
@@ -65,7 +84,7 @@ export default function FileUpload({ onUpload, loading }) {
                 <div className="flex flex-col items-center gap-3">
                     <CheckCircle size={40} className="text-success" />
                     <p className="text-sm font-medium text-surface-700 dark:text-surface-300">{fileName}</p>
-                    <p className="text-xs text-surface-500">Click or drop to replace</p>
+                    <p className="text-xs text-surface-500">Tap or drop to replace</p>
                 </div>
             ) : (
                 <div className="flex flex-col items-center gap-3">
@@ -74,12 +93,12 @@ export default function FileUpload({ onUpload, loading }) {
                     </div>
                     <div>
                         <p className="text-sm font-medium text-surface-700 dark:text-surface-300">
-                            Drop your CSV file here
+                            Tap to select a file
                         </p>
-                        <p className="text-xs text-surface-500 mt-1">or click to browse</p>
+                        <p className="text-xs text-surface-500 mt-1">or drag & drop on desktop</p>
                     </div>
                     <p className="text-[11px] text-surface-400 mt-2">
-                        Accepted format: .csv with columns: timestamp, device, energy_kwh, temperature, occupancy
+                        Accepted: .csv, .xlsx, .xls
                     </p>
                 </div>
             )}
